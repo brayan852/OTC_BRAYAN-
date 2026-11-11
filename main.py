@@ -4,16 +4,19 @@ import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import telebot
 
-# Configuración directa con tus credenciales
-TOKEN = "9029036889:AAH5EXni7UGK-zUdLmr-lb4-vkNIRkTS3hI"
+# Token nuevo y actualizado
+TOKEN = "9029036889:AAEPxpsbU3BKueDAVgyjx8ACAcVPNKvPkbs"
 ADMIN_ID = 8970733209
 
-# 1. Servidor web falso obligatorio para satisfacer el puerto de Render
+# 1. Servidor web para satisfacer el puerto de Render
 class SimpleHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"Bot is running!")
+    def do_HEAD(self):
+        self.send_response(200)
+        self.end_headers()
 
 def run_server():
     port = int(os.environ.get("PORT", 10000))
@@ -33,7 +36,6 @@ try:
         user_id = message.from_user.id
         first_name = message.from_user.first_name
         
-        # Respuesta inicial con los datos de verificación
         texto = (
             f"Id: {user_id}\n"
             f"First: {first_name}\n"
@@ -47,7 +49,7 @@ try:
         print("Iniciando bucle de escucha del bot...")
         bot.infinity_polling(timeout=60, long_polling_timeout=60)
 
-    # Arrancar el bot en un hilo separado para que no bloquee el servidor web
+    # Arrancar el bot en un hilo separado
     threading.Thread(target=run_bot, daemon=True).start()
     print("Módulo de Telegram configurado correctamente.")
 
